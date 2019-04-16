@@ -8,20 +8,20 @@ def Usolve(U, y):
     Output:
       x: the solution vector to U @ x == y
     """
-    # Check the input
-    m, n = L.shape
-    assert m == n, "matrix L must be square"
-    assert np.all(np.triu(U) == U), "matrix U must be lower triangular"
+    m, n = U.shape
+    assert m == n, "matrix U must be square"
+    assert np.all(np.triu(U) == U), "matrix U must be Upper triangular"
     assert np.all(np.diag(U) != 0), "matrix U must have ones on the diagonal"
-    
-    # Make a copy of b that we will transform into the solution
+    yn, = y.shape
+    assert yn == n,"must be same size as U"
+    # Make a copy of y that we will transform into the solution
     x = y.astype(np.float64).copy()
-    
-    # Forward solve
-    for col in range(n):
-      x[:col] -= x[col] * U[:col, col]
-        
+    # back solve
+    for col in reversed(range(n)):
+        x[col] = x[col]/U[col,col]
+        x[:col] = x[:col] - x[col]*U[:col,col]
     return x
+   
     
 
 
